@@ -40,7 +40,7 @@ class Usuario {
 
   static deletarUmUsuario(id) {
     const index = usuarios.findIndex((usuario) => usuario.id === id);
-    usuarios.splice(index, 1);
+    return usuarios.splice(index, 1);
   }
 
   salvar() {
