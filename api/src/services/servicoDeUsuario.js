@@ -44,7 +44,7 @@ class ServicoDeUsuario {
     const validacao = userSchema.safeParse({ nome, email, cpf, senha });
 
     if (validacao.success === false) {
-      return validacao.error.format();
+      return { error: validacao.error.format() };
     }
 
     const usuario = new Usuario(nome, email, cpf, senha);
