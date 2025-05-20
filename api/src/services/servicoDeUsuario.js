@@ -16,7 +16,7 @@ class ServicoDeUsuario {
 
     const usuario = RepositorioDeUsuario.buscarPeloId(id);
     if (!usuario) {
-      throw new HttpError(404, "Usuário nao encontrado!");
+      throw new HttpError(404, "Usuário não encontrado!");
     }
 
     return usuario;
