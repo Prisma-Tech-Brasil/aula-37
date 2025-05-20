@@ -11,9 +11,9 @@ class ServicoDeUsuario {
 
   pegarPeloID(id) {
     if (!id) {
-      throw new Error("O ID não foi informado")
+      throw new Error("O ID não foi informado");
     }
-    
+
     return RepositorioDeUsuario.buscarPeloID(id);
   }
 
@@ -68,6 +68,33 @@ class ServicoDeUsuario {
     // Atualizar o token do usuário
 
     return token;
+  }
+
+  atualizar(usuarioId, dadosNovos) {
+    const usuarioExistente = RepositorioDeUsuario.buscarPeloId(usuarioId);
+    if (!usuarioExistente) {
+      throw new HttpError(404, "Usuário não encontrado!");
+    }
+
+    const { nome, email, cpf, senha } = dadosNovos;
+
+    const dadosAtualizados = {
+      nome: nome ?? usuarioExistente.nome,
+      email: email ?? usuarioExistente.email,
+      cpf: cpf ?? usuarioExistente.cpf,
+      senha: senha ?? usuarioExistente.senha
+    };
+
+    return RepositorioDeUsuario.atualizar(usuarioId, dadosAtualizados);
+  }
+
+  deletar(id) {
+    const usuarioExistente = RepositorioDeUsuario.buscarPeloId(id);
+    if (!usuarioExistente) {
+      throw new HttpError(404, "Usuário nao encontrado!");
+    }
+
+    return RepositorioDeUsuario.deletarUmUsuario(id);
   }
 }
 

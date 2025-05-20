@@ -74,6 +74,43 @@ class ControladorDeUsuario {
       res.status(500).json({ erro: error.message });
     }
   }
+
+  atualizar(req, res) {
+    try {
+      const dados = req.body;
+      const usuarioId = req.params.id;
+      const resposta = servicoDeUsuario.atualizar(usuarioId, dados);
+
+      if (resposta instanceof Error) {
+        return res.status(400).json(resposta.message);
+      }
+
+      res.status(200).json(resposta);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ erro: error.message || "Erro ao buscar usuários." });
+    }
+  }
+
+  deletar(req, res) {
+    try {
+      const id = req.params.id;
+      const resposta = servicoDeUsuario.deletar(id);
+
+      if (resposta instanceof Error) {
+        return res.status(400).json(resposta.message);
+      }
+
+      res
+        .status(200)
+        .json({ mensagem: `Usuário com ID ${id} deletado com sucesso.` });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ erro: error.message || "Erro ao buscar usuários." });
+    }
+  }
 }
 
 module.exports = new ControladorDeUsuario();
