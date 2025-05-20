@@ -6,17 +6,15 @@ class ControladorDeUsuario {
     try {
       const usuarios = servicoDeUsuario.buscarTodos();
 
-      if (usuarios.length === 0) {
-        return res
-          .status(404)
-          .json({ messagem: "Nenhum usuário foi encontrado." });
-      }
-
       res.status(200).json(usuarios);
     } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.status).json({ erro: error.message });
+      }
+
       res
         .status(500)
-        .json({ erro: error.message || "Erro ao buscar usuários." });
+        .json({ erro: error.message });
     }
   }
 
@@ -25,17 +23,15 @@ class ControladorDeUsuario {
       const id = req.params.id;
       const usuario = servicoDeUsuario.pegarPeloID(id);
 
-      if (usuario.length === 0) {
-        return res
-          .status(404)
-          .json({ messagem: "Nenhum usuário foi encontrado." });
-      }
-
       res.status(200).json(usuario);
     } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.status).json({ erro: error.message });
+      }
+
       res
         .status(500)
-        .json({ erro: error.message || "Erro ao buscar usuários." });
+        .json({ erro: error.message });
     }
   }
 
@@ -44,15 +40,15 @@ class ControladorDeUsuario {
       const { nome, email, cpf, senha } = req.body;
       const resposta = servicoDeUsuario.cadastrar(nome, email, cpf, senha);
 
-      if (resposta instanceof Error) {
-        return res.status(400).json(resposta.message);
-      }
-
       res.status(201).json(resposta);
     } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.status).json({ erro: error.message });
+      }
+
       res
         .status(500)
-        .json({ erro: error.message || "Erro ao buscar usuários." });
+        .json({ erro: error.message });
     }
   }
 
@@ -61,17 +57,15 @@ class ControladorDeUsuario {
       const { email, senha } = req.body;
       const resposta = servicoDeUsuario.conectar(email, senha);
 
-      if (resposta instanceof HttpError) {
-        return res.status(resposta.status).json({ erro: resposta.message });
-      }
-
       res.status(200).json(resposta);
     } catch (error) {
       if (error instanceof HttpError) {
         return res.status(error.status).json({ erro: error.message });
       }
 
-      res.status(500).json({ erro: error.message });
+      res
+        .status(500)
+        .json({ erro: error.message });
     }
   }
 
@@ -81,34 +75,34 @@ class ControladorDeUsuario {
       const usuarioId = req.params.id;
       const resposta = servicoDeUsuario.atualizar(usuarioId, dados);
 
-      if (resposta instanceof Error) {
-        return res.status(400).json(resposta.message);
-      }
-
       res.status(200).json(resposta);
     } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.status).json({ erro: error.message });
+      }
+
       res
         .status(500)
-        .json({ erro: error.message || "Erro ao buscar usuários." });
+        .json({ erro: error.message });
     }
   }
 
   deletar(req, res) {
     try {
       const id = req.params.id;
-      const resposta = servicoDeUsuario.deletar(id);
-
-      if (resposta instanceof Error) {
-        return res.status(400).json(resposta.message);
-      }
+      servicoDeUsuario.deletar(id);
 
       res
         .status(200)
         .json({ mensagem: `Usuário com ID ${id} deletado com sucesso.` });
     } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.status).json({ erro: error.message });
+      }
+
       res
         .status(500)
-        .json({ erro: error.message || "Erro ao buscar usuários." });
+        .json({ erro: error.message });
     }
   }
 }

@@ -11,10 +11,15 @@ class ServicoDeUsuario {
 
   pegarPeloID(id) {
     if (!id) {
-      throw new Error("O ID não foi informado");
+      throw new HttpError(400, "O ID não foi informado");
     }
 
-    return RepositorioDeUsuario.buscarPeloID(id);
+    const usuario = RepositorioDeUsuario.buscarPeloId(id);
+    if (!usuario) {
+      throw new HttpError(404, "Usuário nao encontrado!");
+    }
+
+    return usuario;
   }
 
   cadastrar(nome, email, cpf, senha) {
@@ -66,6 +71,8 @@ class ServicoDeUsuario {
       { expiresIn: "1d" }
     );
     // Atualizar o token do usuário
+    usuarioEncontrado.token = token;
+    RepositorioDeUsuario.atualizar(usuarioEncontrado.id, { token });
 
     return token;
   }
